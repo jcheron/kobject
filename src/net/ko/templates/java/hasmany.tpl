@@ -1,0 +1,1 @@
+hasMany(%fkClassName%.class);

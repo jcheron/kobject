@@ -1,0 +1,95 @@
+@CHARSET "UTF-8";
+a {
+	color: #848684;
+	text-decoration: none;
+	cursor: pointer;
+}
+.td{
+	position:relative;
+}
+table{
+    border-collapse : collapse;	
+}
+.selection1
+{
+    FONT-WEIGHT: normal;
+    COLOR: Black;
+    border-top: 1px dotted #e9e9ce;
+    border-bottom: 1px dotted #e9e9ce;
+
+}
+.selection1:hover, .selection2:hover{
+    BACKGROUND-COLOR: #e9e9ce;	
+}
+.selection4
+{
+    BACKGROUND-COLOR: #0e0e0e;
+	 color: white;
+}
+.selection2
+{
+    BACKGROUND-COLOR: #ffffff;
+}
+.selection3
+{
+    FONT-WEIGHT: bold;
+    COLOR: #ffffff;
+    BACKGROUND-COLOR: #848684;
+}
+.odd
+{
+    BACKGROUND-COLOR: #ffffff;
+    border: 1px dotted #e9e9ce;
+}
+.odd:hover
+{
+    BACKGROUND-COLOR: #e9e9ce;
+}
+.sBtn,.sInnerBtn{
+	background: #fcfff4; /* Old browsers */
+	background: -moz-linear-gradient(top,  #fcfff4 0%, #dadbc3 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcfff4), color-stop(100%,#dadbc3)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #fcfff4 0%,#dadbc3 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #fcfff4 0%,#dadbc3 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #fcfff4 0%,#dadbc3 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #fcfff4 0%,#dadbc3 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#dadbc3',GradientType=0 ); /* IE6-9 */
+    border: 0 solid #87B5CF;
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 2px #FFFFFF inset;
+    color: #848684;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: normal;
+    margin: 1px 6px;
+    padding: 3px 10px;
+    display: inline-block;
+}
+.sInnerBtn{
+	position: absolute;
+	right:0;
+}
+.select{
+   BACKGROUND-COLOR: #ECEEEC;
+	BORDER: #B6B8B6 thin inset;
+}
+.Klist{
+	background-color: #ECEEEC;
+	border: #B6B8B6 1px solid;
+	text-align: right;
+	position:relative;
+	padding-left: 30px;
+}
+.selectLine{
+	border:1px solid red;
+}
+.infoMessage{
+ 	background-repeat: no-repeat;
+ 	background-position: left center;
+ 	padding: 4px;
+ 	margin: 2px;
+ 	font-weight: bolder;
+}
+#_ajx{
+height: 30px;
+}

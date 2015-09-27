@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<controllers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xsi:noNamespaceSchemaLocation="http://api.kobject.net/xml/controller.xsd">
+	<class name="KAbsence">
+		<member name="idEtudiant" required="1" max="11" type="integer" />
+		<member name="idSeance" required="1" max="11" type="integer" />
+		<member name="heures" max="15" type="string" />
+		<member name="DateA" required="1" type="date" />
+	</class>
+	<class name="KClasse">
+		<member name="id" max="11" type="autoinc" />
+		<member name="nom" max="20" type="string" />
+	</class>
+	<class name="KCours">
+		<member name="id" max="11" type="autoinc" />
+		<member name="idMatiere" required="1" max="11" type="integer" />
+		<member name="idEnseignant" required="1" max="11" type="integer" />
+	</class>
+	<class name="KEnseignant">
+		<member name="id" max="11" type="autoinc" />
+		<member name="nom" max="40" type="string" />
+		<member name="prenom" max="20" type="string" />
+	</class>
+	<class name="KEtudiant">
+		<member name="id" max="11" type="autoinc" />
+		<member name="idClasse" required="1" max="11" type="integer" />
+		<member name="nom" max="40" type="string" />
+		<member name="prenom" max="20" type="string" />
+	</class>
+	<class name="KHeure">
+		<member name="heure" required="1" type="time" />
+	</class>
+	<class name="KJoursemaine">
+		<member name="jour" required="1" max="10" type="string" />
+	</class>
+	<class name="KMatiere">
+		<member name="id" max="11" type="autoinc" />
+		<member name="nom" max="30" type="string" />
+	</class>
+	<class name="KSeance">
+		<member name="id" max="11" type="autoinc" />
+		<member name="idClasse" required="1" max="11" type="integer" />
+		<member name="idCours" required="1" max="11" type="integer" />
+		<member name="duree" max="30" min="18" type="integer" />
+		<member name="heure" type="time" />
+		<member name="jour" list="{Lundi,Mardi,Mercredi,Jeudi,Vendredi}" />
+	</class>
+</controllers>

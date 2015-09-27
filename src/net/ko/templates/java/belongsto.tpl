@@ -1,0 +1,1 @@
+belongsTo(%fkClassName%.class);

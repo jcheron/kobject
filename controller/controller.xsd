@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="controllers" type="controllerType"></xsd:element>
+    <xsd:complexType name="classType">
+    	<xsd:sequence>
+    		<xsd:element name="member" type="memberType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    	<xsd:attribute name="name" type="xsd:string"></xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="memberType">
+    	<xsd:attribute name="name" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="required" type="xsd:boolean"></xsd:attribute>
+    	<xsd:attribute name="min" type="xsd:int"></xsd:attribute>
+    	<xsd:attribute name="max" type="xsd:int"></xsd:attribute>
+    	<xsd:attribute name="type" type="tType"></xsd:attribute>
+    	<xsd:attribute name="control" type="cType"></xsd:attribute>
+    	<xsd:attribute name="regExpr" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="list" type="xsd:string"></xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="controllerType">
+    	<xsd:sequence>
+    		<xsd:element name="class" type="classType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="tType">
+    	<xsd:restriction base="xsd:string">
+    		<xsd:enumeration value="autoinc"></xsd:enumeration>
+    		<xsd:enumeration value="num"></xsd:enumeration>
+    		<xsd:enumeration value="string"></xsd:enumeration>
+    		<xsd:enumeration value="integer"></xsd:enumeration>
+    		<xsd:enumeration value="boolean"></xsd:enumeration>
+    		<xsd:enumeration value="date"></xsd:enumeration>
+    		<xsd:enumeration value="time"></xsd:enumeration>
+    		<xsd:enumeration value="datetime"></xsd:enumeration>
+    		<xsd:enumeration value="tel"></xsd:enumeration>
+    		<xsd:enumeration value="mail"></xsd:enumeration>
+    	</xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="cType">
+    	<xsd:restriction base="xsd:string">
+    		<xsd:enumeration value="text"></xsd:enumeration>
+    		<xsd:enumeration value="hidden"></xsd:enumeration>
+    		<xsd:enumeration value="cmb"></xsd:enumeration>
+    		<xsd:enumeration value="list"></xsd:enumeration>
+    		<xsd:enumeration value="radio"></xsd:enumeration>
+    		<xsd:enumeration value="checkbox"></xsd:enumeration>
+    		<xsd:enumeration value="date"></xsd:enumeration>
+    		<xsd:enumeration value="file"></xsd:enumeration>
+    		<xsd:enumeration value="image"></xsd:enumeration>
+    		<xsd:enumeration value="textarea"></xsd:enumeration>
+    		<xsd:enumeration value="password"></xsd:enumeration>
+    		<xsd:enumeration value="label"></xsd:enumeration>
+    	</xsd:restriction>
+    </xsd:simpleType>    
+</xsd:schema>

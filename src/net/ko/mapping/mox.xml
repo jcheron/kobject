@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mainController xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="mapping.xsd">
+  <mappings>
+    <mapping classControl="" mainControl="true" method="POST" queryString="" requestURL="" responseURL="">
+      <parameter name="" value=""/>
+    </mapping>
+  </mappings>
+  <filters>
+    <filter queryString="" requestURL="" responseURL="">
+      <parameter name="" position="0"/>
+    </filter>
+  </filters>
+  <ajax-includes>
+    <request requestURL="">
+    <js triggerId="">
+      <include method="POST" targetFunction="" targetId="" targetParams="" targetURL=""/>
+    </js>
+    </request>
+  </ajax-includes>
+</mainController>

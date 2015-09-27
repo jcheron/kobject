@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+    <xsd:element name="mainController" type="controllerType"></xsd:element>
+    <xsd:complexType name="mappingType">
+    	<xsd:sequence>
+    		<xsd:element name="parameter" type="parameterType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    	<xsd:attribute name="method" type="methodType"></xsd:attribute>
+    	<xsd:attribute name="requestURL" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="responseURL" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="mainControl" type="xsd:boolean"></xsd:attribute>
+    	<xsd:attribute name="classControl" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="queryString" type="xsd:string"></xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="ajaxRequestType">
+    	<xsd:sequence>
+    		<xsd:element name="js" type="ajaxJsType" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+    	</xsd:sequence>
+    	<xsd:attribute name="requestURL" type="xsd:string"></xsd:attribute>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ajaxJsType">
+    	<xsd:sequence minOccurs="1">
+    		<xsd:element name="include" type="ajaxIncludeType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    		<xsd:element name="function" type="ajaxFunctionType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    		<xsd:element name="message" type="ajaxMessageType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    		<xsd:element name="showHide" type="ajaxShowHideType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    		<xsd:element name="selector" type="ajaxSelectorType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    	<xsd:attribute name="triggerId" type="xsd:string" use="optional"></xsd:attribute>
+    	<xsd:attribute name="triggerName" type="xsd:string" use="optional"></xsd:attribute>
+    	<xsd:attribute name="triggerTagName" type="xsd:string" use="optional"></xsd:attribute>
+    	<xsd:attribute name="triggerEvent" type="xsd:string" use="optional" default="click"></xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="ajaxIncludeType">
+    	<xsd:sequence>
+    		<xsd:element name="include" type="ajaxIncludeType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    		<xsd:element name="function" type="ajaxFunctionType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    		<xsd:element name="message" type="ajaxMessageType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    		<xsd:element name="showHide" type="ajaxShowHideType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    		<xsd:element name="selector" type="ajaxSelectorType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    	<xsd:attribute name="formName" type="xsd:string" use="optional"></xsd:attribute>
+    	<xsd:attribute name="targetId" type="xsd:string" use="required"></xsd:attribute>
+    	<xsd:attribute name="targetURL" type="xsd:string" use="required"></xsd:attribute>
+    	<xsd:attribute name="method" type="methodType" use="optional"></xsd:attribute>
+    	<xsd:attribute name="targetParams" type="xsd:string" use="optional"></xsd:attribute>
+    	<xsd:attribute name="targetFunction" type="xsd:string" use="optional"></xsd:attribute>
+    	<xsd:attribute name="condition" type="xsd:string" use="optional"></xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="ajaxFunctionType">
+    	<xsd:attribute name="script" type="xsd:string" use="required"></xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="ajaxMessageType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+	    	<xsd:attribute name="targetId" type="xsd:string" use="required"></xsd:attribute>
+	    	</xsd:extension>
+    	</xsd:simpleContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ajaxShowHideType">
+    	<xsd:attribute name="targetId" type="xsd:string" use="required"></xsd:attribute>
+    	<xsd:attribute name="visible" type="xsd:boolean" use="optional" default="1"></xsd:attribute>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ajaxSelectorType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+		    	<xsd:attribute name="containerId" type="xsd:string" use="required"></xsd:attribute>
+		    	<xsd:attribute name="tagName" type="xsd:string" use="optional"></xsd:attribute>
+		    	<xsd:attribute name="elementName" type="xsd:string" use="optional"></xsd:attribute>
+		    	<xsd:attribute name="event" type="xsd:string" use="optional" default="click"></xsd:attribute>
+		    	<xsd:attribute name="targetFunction" type="xsd:string" use="optional"></xsd:attribute>
+		    	<xsd:attribute name="allowNull" type="xsd:boolean" use="optional" default="0"></xsd:attribute>
+		    	<xsd:attribute name="startIndex" type="xsd:integer" use="optional" default="1"></xsd:attribute>
+	    	</xsd:extension>
+    	</xsd:simpleContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="filterType">
+    	<xsd:sequence>
+    		<xsd:element name="parameter" type="filterParameterType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    	<xsd:attribute name="requestURL" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="responseURL" type="xsd:string"></xsd:attribute>
+    	<xsd:attribute name="queryString" type="xsd:string"></xsd:attribute>
+    </xsd:complexType>
+    
+    <xsd:complexType name="parameterType">
+    	<xsd:attribute name="name" type="xsd:string" use="required"></xsd:attribute>
+    	<xsd:attribute name="value" type="xsd:string" use="optional"></xsd:attribute>
+    </xsd:complexType>
+    
+    <xsd:complexType name="filterParameterType">
+    	<xsd:attribute name="name" type="xsd:string" use="required"></xsd:attribute>
+    	<xsd:attribute name="position" type="xsd:integer" use="optional"></xsd:attribute>
+    </xsd:complexType>
+    
+    <xsd:complexType name="mappingsType">
+    	<xsd:sequence>
+    		<xsd:element name="mapping" type="mappingType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="filtersType">
+    	<xsd:sequence>
+    		<xsd:element name="filter" type="filterType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ajaxIncludesType">
+    	<xsd:sequence>
+    		<xsd:element name="request" type="ajaxRequestType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="controllerType">
+    	<xsd:sequence>
+    		<xsd:element name="mappings" type="mappingsType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    		<xsd:element name="filters" type="filtersType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    		<xsd:element name="ajax-includes" type="ajaxIncludesType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="methodType">
+    	<xsd:restriction base="xsd:string">
+    		<xsd:enumeration value="POST"></xsd:enumeration>
+    		<xsd:enumeration value="GET"></xsd:enumeration>
+    		<xsd:enumeration value="*"></xsd:enumeration>
+    	</xsd:restriction>
+    </xsd:simpleType>
+</xsd:schema>
