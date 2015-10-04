@@ -39,6 +39,7 @@ public class KHtmlFieldControl extends KFieldControl {
 	private List<String> cssClasses;
 	private String _cssClass = "";
 	private String template;
+	private String placeHolder;
 
 	private KobjectHttpAbstractForm owner = null;
 	private boolean onlyField;
@@ -193,8 +194,12 @@ public class KHtmlFieldControl extends KFieldControl {
 		case khcTel:
 		case khcColor:
 		case khcSearch:
+			String strPlaceHolder = "";
+			if (KString.isNotNull(placeHolder)) {
+				strPlaceHolder = "placeholder='" + placeHolder + "'";
+			}
 			ret += getDefaultHtmlCaption();
-			ret += beforeField + "<input type='" + type + "' id='" + this.id + "' name='" + this.name + "' value='" + this.value + "' class='form-control' " + strMax + strMin + this.options + "/>" + afterField;
+			ret += beforeField + "<input type='" + type + "' id='" + this.id + "' name='" + this.name + "' value='" + this.value + "' " + strPlaceHolder + " class='form-control' " + strMax + strMin + this.options + "/>" + afterField;
 			ret += afterAll;
 			break;
 		case khcFile:
@@ -259,7 +264,11 @@ public class KHtmlFieldControl extends KFieldControl {
 			ret = "<input type='" + type + "' id='" + this.id + "' name='" + this.name + "' value='" + this.value + "'/>";
 			break;
 		case khcCmb:
-			ret += getDefaultHtmlCaption() + beforeField + "<" + type + " id='" + this.id + "' name='" + this.name + "' " + this.options + " class='form-control' " + ">" + innerHtml + "</select>" + afterField;
+			String defaultOption = "";
+			if (KString.isNotNull(placeHolder)) {
+				defaultOption = "<option value=''>" + placeHolder + "</option>";
+			}
+			ret += getDefaultHtmlCaption() + beforeField + "<" + type + " id='" + this.id + "' name='" + this.name + "' " + this.options + " class='form-control' " + ">" + defaultOption + innerHtml + "</select>" + afterField;
 			ret += afterAll;
 			break;
 		case khcList:
@@ -823,5 +832,13 @@ public class KHtmlFieldControl extends KFieldControl {
 		if (KString.isNotNull(template)) {
 			fieldType = HtmlControlType.khcCustom;
 		}
+	}
+
+	public String getPlaceHolder() {
+		return placeHolder;
+	}
+
+	public void setPlaceHolder(String placeHolder) {
+		this.placeHolder = placeHolder;
 	}
 }

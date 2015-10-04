@@ -98,8 +98,8 @@ public class KObjectFieldController extends KObject implements IKoController,
 		this.transform = element.getAttribute("transform");
 		this.validateMethodName = element.getAttribute("validate");
 		String templateUrl = element.getAttribute("templateUrl");
-		setTemplateUrl(templateUrl);
-
+		if (KString.isNotNull(templateUrl))
+			setTemplateUrl(templateUrl);
 		setControlType();
 	}
 
