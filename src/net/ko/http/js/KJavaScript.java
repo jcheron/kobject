@@ -2,6 +2,7 @@ package net.ko.http.js;
 
 import net.ko.controller.KObjectController;
 import net.ko.framework.Ko;
+import net.ko.http.objects.KQueryString;
 import net.ko.http.objects.KRequest;
 import net.ko.http.views.KPageList;
 import net.ko.kobject.KObject;
@@ -62,8 +63,10 @@ public class KJavaScript {
 		String frmValidCaption = kpageList.getFrmValidCaption();
 		String frmCancelCaption = kpageList.getFrmCancelCaption();
 
-		if (!"".equals(queryString))
+		if (!"".equals(queryString)) {
 			queryString = "&" + queryString;
+		}
+		queryString = KQueryString.setValue(queryString, "_nb", kpageList.getRowCount() + "");
 
 		ret = "<script type='text/javascript'>\n";
 		String idLb = kpageList.getIdLb();

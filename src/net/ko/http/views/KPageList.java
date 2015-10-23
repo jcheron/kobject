@@ -476,8 +476,8 @@ public class KPageList extends KAbstractView implements KMaskInterface {
 		int page = KRequest.GETPOST("_page", request, 1);
 		int totalRowCount = KRequest.GETPOST("_totalRowCount", request, -1);
 		if (totalRowCount != -1) {
-			if (page > totalRowCount / rowCount)
-				page = totalRowCount / rowCount;
+			if (page > Math.ceil(1.0 * totalRowCount / rowCount))
+				page -= 1;
 		}
 		if (page < 1)
 			page = 1;
