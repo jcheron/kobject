@@ -88,7 +88,9 @@ public class KSPageListTpl extends KSAbstractViewTpl implements Servlet {
 			String id = clazz.getSimpleName();
 			kpage.setName(id);
 			kpage.setId(id);
-			kpage.setEditFormParams("frm" + id, f.getName().replace("." + extension, ".view"));
+			// kpage.setEditFormParams("frm" + id, f.getName().replace("." +
+			// extension, ".view"));
+			kpage.setIdForm("frm" + id);
 			// kpage.setMessageAndUpdateUrl(f.getName());
 			if (kpage.getMode() == 1)
 				kpage.load();

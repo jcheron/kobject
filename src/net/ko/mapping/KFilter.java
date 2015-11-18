@@ -61,7 +61,7 @@ public class KFilter extends KFilterMapping {
 	}
 
 	@Override
-	public boolean requestURLMatches(HttpServletRequest request) {
+	public boolean requestURLMatches(HttpServletRequest request, boolean forward) {
 		boolean result = true;
 		if (requestURL != null && !"".equals(requestURL)) {
 			Pattern p = Pattern.compile(getRequestRegExpr(), Pattern.CASE_INSENSITIVE);
@@ -90,7 +90,7 @@ public class KFilter extends KFilterMapping {
 
 	@Override
 	public boolean matches(HttpServletRequest request) {
-		boolean result = requestURLMatches(request);
+		boolean result = requestURLMatches(request, true);
 		return result;
 	}
 

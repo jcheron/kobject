@@ -47,12 +47,12 @@ public abstract class KAbstractFilterMapping implements IHasParentObject,
 		this.requestURL = requestURL;
 	}
 
-	public boolean requestURLMatches(HttpServletRequest request) {
+	public boolean requestURLMatches(HttpServletRequest request, boolean forward) {
 		boolean result = true;
 		if (requestURL != null && !"".equals(requestURL)) {
 			String realRequestURL = request.getServletPath();
 			;
-			if (request.getAttribute("javax.servlet.forward.servlet_path") != null) {
+			if (request.getAttribute("javax.servlet.forward.servlet_path") != null && forward) {
 				realRequestURL = request.getAttribute("javax.servlet.forward.servlet_path") + "";
 			}
 			Pattern p = Pattern.compile(getRequestRegExpr(), Pattern.CASE_INSENSITIVE);

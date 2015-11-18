@@ -56,7 +56,8 @@ public class KAjaxRequest extends KAbstractFilterMapping implements Cloneable {
 
 	@Override
 	public boolean matches(HttpServletRequest request) {
-		return requestURLMatches(request);
+
+		return requestURLMatches(request, false);
 	}
 
 	@Override

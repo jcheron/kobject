@@ -172,7 +172,7 @@ public class KMapping extends KFilterMapping {
 
 	@Override
 	public boolean matches(HttpServletRequest request) {
-		boolean result = methodMatches(request) && requestURLMatches(request) && paramsMatches(request);
+		boolean result = methodMatches(request) && requestURLMatches(request, false) && paramsMatches(request);
 		return result;
 	}
 

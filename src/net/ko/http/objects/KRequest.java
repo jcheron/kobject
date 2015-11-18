@@ -44,6 +44,10 @@ public class KRequest {
 		return request.getMethod().equalsIgnoreCase("post");
 	}
 
+	public static boolean isAjax(HttpServletRequest request) {
+		return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+	}
+
 	public static String GETPOST(String key, HttpServletRequest request) {
 		if (request.getParameter(key) != null)
 			return request.getParameter(key);
