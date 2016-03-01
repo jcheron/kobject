@@ -2,6 +2,7 @@ package net.ko.http.views;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -669,8 +670,13 @@ public class KHttpForm extends KobjectHttpAbstractForm {
 			this.updateAction = this.ko.getRecordStatus();
 
 			DaoList daoList = Ko.getDaoList(ko.getClass());
-			daoList.updateToSupport(this.ko);
-			daoList.close();
+			try {
+				daoList.updateToSupport(this.ko);
+			} catch (SQLException e1) {
+				Ko.klogger().log(Level.SEVERE, "Impossible de mettre à jour l'objet " + this.ko, e1);
+			} finally {
+				daoList.close();
+			}
 
 			if (request.getParameter("_delete") == null || !KString.isBooleanTrue(request.getParameter("_delete"))) {
 				for (KHtmlFieldControl fc : fieldsToSubmit) {

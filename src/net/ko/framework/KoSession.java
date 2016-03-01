@@ -1,5 +1,6 @@
 package net.ko.framework;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -140,22 +141,22 @@ public class KoSession {
 		return result;
 	}
 
-	public static <T extends KObject> void add(T object) {
+	public static <T extends KObject> void add(T object) throws SQLException {
 		object.toAdd();
 		persist(object);
 	}
 
-	public static <T extends KObject> void update(T object) {
+	public static <T extends KObject> void update(T object) throws SQLException {
 		object.toUpdate();
 		persist(object);
 	}
 
-	public static <T extends KObject> void delete(T object) {
+	public static <T extends KObject> void delete(T object) throws SQLException {
 		object.toDelete();
 		persist(object);
 	}
 
-	public static <T extends KObject> void persist(T object) {
+	public static <T extends KObject> void persist(T object) throws SQLException {
 		if (KRecordStatus.rsNone.equals(object.getRecordStatus()))
 			object.toAdd();
 		IGenericDao<T> dao = (IGenericDao<T>) getDao(object.getClass());
@@ -166,7 +167,7 @@ public class KoSession {
 		}
 	}
 
-	public static <T extends KObject> void persist(KListObject<T> list) {
+	public static <T extends KObject> void persist(KListObject<T> list) throws SQLException {
 		IGenericDao<T> dao = getDao(list.getClazz());
 		try {
 			dao.update(list);

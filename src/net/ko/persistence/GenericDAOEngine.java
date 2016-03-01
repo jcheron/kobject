@@ -184,8 +184,13 @@ public class GenericDAOEngine {
 				KListObject<? extends KObject> list = e.getValue();
 				dao = getDao(list.getClazz());
 				dao.setLoading(true);
-				getDao(list.getClazz()).update(list);
-				dao.setLoading(false);
+				try {
+					getDao(list.getClazz()).update(list);
+				} catch (SQLException e1) {
+					Ko.klogger().log(Level.SEVERE, "Erreur sur l'insertion des entités ", e);
+				} finally {
+					dao.setLoading(false);
+				}
 			}
 		}
 	}

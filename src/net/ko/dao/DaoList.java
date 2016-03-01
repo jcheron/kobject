@@ -1,6 +1,7 @@
 package net.ko.dao;
 
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,21 +23,21 @@ public class DaoList {
 		this.items = items;
 	}
 
-	public boolean update(KObject object) {
+	public boolean update(KObject object) throws SQLException {
 		boolean result = false;
 		for (DatabaseDAO<KObject> dao : items)
 			dao.update(object);
 		return result;
 	}
 
-	public boolean updateToSupport(KObject object) {
+	public boolean updateToSupport(KObject object) throws SQLException {
 		boolean result = false;
 		for (DatabaseDAO<KObject> dao : items)
 			dao.updateToSupport(object);
 		return result;
 	}
 
-	public boolean update(KListObject<? extends KObject> listObject) {
+	public boolean update(KListObject<? extends KObject> listObject) throws SQLException {
 		boolean result = false;
 		for (DatabaseDAO dao : items)
 			dao.update(listObject);

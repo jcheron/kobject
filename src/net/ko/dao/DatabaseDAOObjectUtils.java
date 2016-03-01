@@ -288,8 +288,9 @@ public class DatabaseDAOObjectUtils {
 	 * @param db
 	 *            instance de KDataBase
 	 * @return vrai si l'objet a pu être mis à jour dans la base
+	 * @throws SQLException
 	 */
-	public static boolean updateToDb(KObject object, KDataBase db, DatabaseDAO<? extends KObject> dao) {
+	public static boolean updateToDb(KObject object, KDataBase db, DatabaseDAO<? extends KObject> dao) throws SQLException {
 		return updateToDb(object, db, false, dao);
 	}
 
@@ -310,8 +311,9 @@ public class DatabaseDAOObjectUtils {
 	 * @param fromList
 	 *            vrai si l'objet est mis à jour depuis une liste d'objets
 	 * @return vrai si l'objet a pu être mis à jour dans la base
+	 * @throws Exception
 	 */
-	public static boolean updateToDb(KObject object, KDataBase db, boolean fromList, DatabaseDAO<? extends KObject> dao) {
+	public static boolean updateToDb(KObject object, KDataBase db, boolean fromList, DatabaseDAO<? extends KObject> dao) throws SQLException {
 		boolean ret = false;
 		if (db != null) {
 			Ko.observable.setChanged();
@@ -359,34 +361,40 @@ public class DatabaseDAOObjectUtils {
 			}
 			KPreparedStatement st = null;
 			try {
-				if (updateInstruction != null) {
-					st = new KPreparedStatement(db);
-					st.executeUpdate(updateInstruction);
-					if (recordStatus.equals(KRecordStatus.rsNew)) {
-						object.setKeyValues(st.getGeneratedKeys());
-					}
+				try {
+					if (updateInstruction != null) {
+						st = new KPreparedStatement(db);
+						st.executeUpdate(updateInstruction);
+						if (recordStatus.equals(KRecordStatus.rsNew)) {
+							object.setKeyValues(st.getGeneratedKeys());
+						}
 
-					Map<String, Object> keyValues = object.getKeyValues(true, true);
-					KDebugConsole.print(keyValues + "", "KOBJECT", object.getClass().getSimpleName() + ".updateToDb");
+						Map<String, Object> keyValues = object.getKeyValues(true, true);
+						KDebugConsole.print(keyValues + "", "KOBJECT", object.getClass().getSimpleName() + ".updateToDb");
+						object.setLoaded();
+
+						if (!dao.isLoading()) {
+							if (recordStatus.equals(KRecordStatus.rsNew))
+								updateInstruction.addFields(object.getKeyValues());
+							dao.memoriseQuery(updateInstruction);
+						}
+						// TODO à vérifier...pourquoi cette ligne ?
+						// if (dao.getEngine() != null && Ko.kmemoryDaoEngine()
+						// ==
+						// null)
+						object.getConstraints().save(dao);
+
+						if (Ko.useCache)
+							KCache.replace(object, fromList);
+						ret = true;
+					}
 					object.setLoaded();
-
-					if (!dao.isLoading()) {
-						if (recordStatus.equals(KRecordStatus.rsNew))
-							updateInstruction.addFields(object.getKeyValues());
-						dao.memoriseQuery(updateInstruction);
-					}
-					// TODO à vérifier...pourquoi cette ligne ?
-					// if (dao.getEngine() != null && Ko.kmemoryDaoEngine() ==
-					// null)
-					object.getConstraints().save(dao);
-
-					if (Ko.useCache)
-						KCache.replace(object, fromList);
-					ret = true;
+				} catch (SQLException e) {
+					Ko.klogger().log(Level.SEVERE, "Impossible d'exécuter la requête : " + query, e);
+					throw e;
+				} catch (IllegalAccessException | NoSuchFieldException e) {
+					Ko.klogger().log(Level.WARNING, "Impossible de mettre à jour l'objet : " + object, e);
 				}
-				object.setLoaded();
-			} catch (Exception e) {
-				Ko.klogger().log(Level.SEVERE, "Impossible d'exécuter la requête : " + query, e);
 			} finally {
 				try {
 					if (st != null)

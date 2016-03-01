@@ -1,5 +1,6 @@
 package net.ko.http.views;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -460,8 +461,13 @@ public class KHtmlFieldControl extends KFieldControl {
 							}
 						}
 						DaoList daoList = Ko.getDaoList(kl.getClazz());
-						daoList.update(kl);
-						daoList.close();
+						try {
+							daoList.update(kl);
+						} catch (SQLException e) {
+							Ko.klogger().log(Level.SEVERE, "Impossible de mettre à jour la liste " + kl, e);
+						} finally {
+							daoList.close();
+						}
 					}
 				}
 			}

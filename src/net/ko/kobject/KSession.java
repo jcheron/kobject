@@ -3,7 +3,7 @@
  * 
  * @author jcheron
  * @link http://www.kobject.net/
- * @copyright Copyright kobject 2008-2013
+ * @copyright Copyright kobject 2008-2016
  * @license http://www.kobject.net/index.php?option=com_content&view=article&id=50&Itemid=2  LGPL License
  * @version $Id: KSession.java,v 1.4 2011/01/14 01:12:55 jcheron Exp $
  * @package ko.kobject
@@ -159,8 +159,9 @@ public class KSession {
 	 * 
 	 * @see net.ko.kobject.KRecordStatus
 	 * @param object
+	 * @throws SQLException
 	 */
-	public void saveToDb(KObject object) {
+	public void saveToDb(KObject object) throws SQLException {
 		DaoList daoList = Ko.getDaoList(object.getClass());
 		daoList.updateToSupport(object);
 		daoList.close();
@@ -171,8 +172,9 @@ public class KSession {
 	 * 
 	 * @param object
 	 *            objet à ajouter
+	 * @throws SQLException
 	 */
-	public void insertToDb(KObject object) {
+	public void insertToDb(KObject object) throws SQLException {
 		updateRsToDb(object, KRecordStatus.rsNew);
 	}
 
@@ -180,8 +182,9 @@ public class KSession {
 	 * Modifie l'objet dans la base de données
 	 * 
 	 * @param object
+	 * @throws SQLException
 	 */
-	public void updateToDb(KObject object) {
+	public void updateToDb(KObject object) throws SQLException {
 		updateRsToDb(object, KRecordStatus.rsUpdate);
 	}
 
@@ -193,8 +196,9 @@ public class KSession {
 	 * @see net.ko.kobject.KRecordStatus
 	 * @param list
 	 *            Liste d'objets
+	 * @throws SQLException
 	 */
-	public void updateToDb(KListObject<? extends KObject> list) {
+	public void updateToDb(KListObject<? extends KObject> list) throws SQLException {
 		KDataBase kdb = getDbInstance();
 		if (KDataBase.isValid(kdb))
 			getDao(list.getClazz()).update(list);
@@ -206,8 +210,9 @@ public class KSession {
 	 * 
 	 * @param object
 	 *            objet à supprimer
+	 * @throws SQLException
 	 */
-	public void deleteFromDb(KObject object) {
+	public void deleteFromDb(KObject object) throws SQLException {
 		updateRsToDb(object, KRecordStatus.rsDelete);
 	}
 
@@ -423,8 +428,9 @@ public class KSession {
 	/**
 	 * @param object
 	 * @param rs
+	 * @throws SQLException
 	 */
-	private void updateRsToDb(KObject object, KRecordStatus rs) {
+	private void updateRsToDb(KObject object, KRecordStatus rs) throws SQLException {
 		object.setRecordStatus(rs);
 		DaoList daoList = Ko.getDaoList(object.getClass());
 		daoList.updateToSupport(object);

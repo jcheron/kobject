@@ -68,7 +68,7 @@ public class DatabaseDAO<T extends KObject> extends KGenericDao<T> {
 	}
 
 	@Override
-	public Object create(T newInstance) {
+	public Object create(T newInstance) throws SQLException {
 		newInstance.toAdd();
 		updateToSupport(newInstance);
 		return newInstance.getFirstKeyValue();
@@ -109,13 +109,13 @@ public class DatabaseDAO<T extends KObject> extends KGenericDao<T> {
 	}
 
 	@Override
-	public void update(T object) {
+	public void update(T object) throws SQLException {
 		object.toUpdate();
 		updateToSupport(object);
 	}
 
 	@Override
-	public void delete(T object) {
+	public void delete(T object) throws SQLException {
 		object.toDelete();
 		updateToSupport(object);
 	}
@@ -266,16 +266,16 @@ public class DatabaseDAO<T extends KObject> extends KGenericDao<T> {
 	}
 
 	@Override
-	public boolean updateToSupport(T object) {
+	public boolean updateToSupport(T object) throws SQLException {
 		return updateToSupport(object, false);
 	}
 
-	protected boolean updateToSupport(T object, boolean fromList) {
+	protected boolean updateToSupport(T object, boolean fromList) throws SQLException {
 		return DatabaseDAOObjectUtils.updateToDb(object, getDatabase(), fromList, this);
 	}
 
 	@Override
-	public void update(KListObject<? extends KObject> listObject) {
+	public void update(KListObject<? extends KObject> listObject) throws SQLException {
 		listObject.updateItemsToDelete();
 		for (KObject ko : listObject) {
 			updateToSupport((T) ko, true);

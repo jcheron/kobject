@@ -1,11 +1,13 @@
 package net.ko.dao;
 
+import java.sql.SQLException;
+
 import net.ko.kobject.KListObject;
 import net.ko.kobject.KObject;
 import net.ko.ksql.KParameterizedInstruction;
 
 public interface IGenericDao<T extends KObject> {
-	Object create(T newInstance);
+	Object create(T newInstance) throws SQLException;
 
 	T readById(Object id);
 
@@ -29,11 +31,11 @@ public interface IGenericDao<T extends KObject> {
 
 	KListObject<T> readAll(Object id, boolean others, int depth);
 
-	void update(T object);
+	void update(T object) throws SQLException;
 
-	void update(KListObject<? extends KObject> listObject);
+	void update(KListObject<? extends KObject> listObject) throws SQLException;
 
-	void delete(T object);
+	void delete(T object) throws SQLException;
 
 	void delete(Object id);
 
@@ -55,7 +57,7 @@ public interface IGenericDao<T extends KObject> {
 
 	String makeFilter(T object, String filter) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException;
 
-	boolean updateToSupport(T object);
+	boolean updateToSupport(T object) throws SQLException;
 
 	KListObject<T> gotoo(KListObject<T> listObject, int limit, int offset, String sortedField, boolean asc);
 }
