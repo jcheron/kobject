@@ -69,6 +69,9 @@ public class KFuncOrSet {
 		case "DateFormatter":
 			result = DateFormatter.class;
 			break;
+		case "ko":
+			result = getVariable("ko", caller);
+			break;
 		default:
 			try {
 				result = Ko.getVariable(caller, className);

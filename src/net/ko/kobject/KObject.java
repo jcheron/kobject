@@ -573,8 +573,9 @@ public class KObject implements Comparable, Serializable {
 		return null;
 	}
 
-	protected KConstraint hasAndBelongsToMany(String member, Class<? extends KObject> clazz, Class<? extends KObject> joinClass, String fieldKey, String destTable, String destFieldKey, String joinFieldKey, String joinDestFieldKey) {
-		KConstraintHasAndBelongsToMany c = new KConstraintHasAndBelongsToMany(member, clazz, joinClass, fieldKey, destTable, destFieldKey, joinFieldKey, joinDestFieldKey);
+	protected KConstraint hasAndBelongsToMany(String member, Class<? extends KObject> targetClass, Class<? extends KObject> joinClass, String primaryKey, String targetTable, String targetPrimaryKey, String joinForeignKey, String joinTargetForeignKey) {
+
+		KConstraintHasAndBelongsToMany c = new KConstraintHasAndBelongsToMany(member, targetClass, joinClass, primaryKey, targetTable, targetPrimaryKey, joinForeignKey, joinTargetForeignKey);
 		c.setOwner(this);
 		constraints.add(c);
 		return c;
@@ -635,8 +636,8 @@ public class KObject implements Comparable, Serializable {
 		return c;
 	}
 
-	protected KConstraint hasMany(String member, Class<? extends KObject> clazz, String fieldKey, String destTable, String destFieldKey) {
-		KConstraintHasMany c = new KConstraintHasMany(member, clazz, fieldKey, destTable, destFieldKey);
+	protected KConstraint hasMany(String member, Class<? extends KObject> clazz, String primaryKey, String targetTable, String targetPrimaryKey) {
+		KConstraintHasMany c = new KConstraintHasMany(member, clazz, primaryKey, targetTable, targetPrimaryKey);
 		c.setOwner(this);
 		constraints.add(c);
 		return c;
@@ -658,8 +659,8 @@ public class KObject implements Comparable, Serializable {
 		return hasManyBelongsTo(member, clazz, fieldKey, destTable, destFieldKey, belongsToClass, belongsToField);
 	}
 
-	protected KConstraint hasManyBelongsTo(String member, Class<? extends KObject> clazz, String fieldKey, String destTable, String destFieldKey, Class<? extends KObject> belongsToClass, String belongsToField) {
-		KConstraintHasManyBelongsTo c = new KConstraintHasManyBelongsTo(member, clazz, fieldKey, destTable, destFieldKey, belongsToClass, belongsToField);
+	protected KConstraint hasManyBelongsTo(String member, Class<? extends KObject> clazz, String primaryKey, String targetTable, String targetPrimaryKey, Class<? extends KObject> belongsToClass, String belongsToField) {
+		KConstraintHasManyBelongsTo c = new KConstraintHasManyBelongsTo(member, clazz, primaryKey, targetTable, targetPrimaryKey, belongsToClass, belongsToField);
 		c.setOwner(this);
 		constraints.add(c);
 		return c;
