@@ -117,4 +117,17 @@ public class KMetaObject<T extends KObject> implements Serializable {
 	public UniqueConstraint[] getUniqueConstraints() {
 		return uniqueConstraints;
 	}
+
+	/**
+	 * Retourne le nom du premier membre faisant partie de la clé primaire
+	 * 
+	 * @return nom du membre clé primaire
+	 */
+	public String getFirstKey() {
+		String result = "";
+		List<String> keys = getKeyFields();
+		if (keys != null && keys.size() > 0)
+			result = keys.get(0);
+		return result;
+	}
 }

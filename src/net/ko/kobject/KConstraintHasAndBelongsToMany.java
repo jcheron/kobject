@@ -18,6 +18,7 @@ import net.ko.dao.IGenericDao;
 import net.ko.db.KDataBase;
 import net.ko.framework.Ko;
 import net.ko.ksql.KSqlQuery;
+import net.ko.persistence.orm.KMetaObject;
 
 public class KConstraintHasAndBelongsToMany extends KConstraint {
 	private static final long serialVersionUID = 1L;
@@ -126,8 +127,12 @@ public class KConstraintHasAndBelongsToMany extends KConstraint {
 	 * return result; }
 	 */
 	public String getJoinTable() {
-		if (joinTable == null || "".equals(joinTable))
-			joinTable = KSqlQuery.getTableName(Ko.getKoInstance(joinClass).getTableName());
+		KMetaObject<? extends KObject> joinMetaObject = Ko.getMetaObject(joinClass);
+		if (joinTable == null || "".equals(joinTable)) {
+			// joinTable =
+			// KSqlQuery.getTableName(Ko.getKoInstance(joinClass).getTableName());
+			joinTable = joinMetaObject.getTableName();
+		}
 		return joinTable;
 	}
 

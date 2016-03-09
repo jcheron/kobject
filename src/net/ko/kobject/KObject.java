@@ -547,14 +547,20 @@ public class KObject implements Comparable, Serializable {
 	}
 
 	protected KConstraint hasAndBelongsToMany(Class<? extends KObject> joinClass, String member, Class<? extends KObject> clazz) {
-		KObject destInstance;
+		// KObject destInstance;
 		try {
-			destInstance = Ko.getKoInstance(clazz);
-			KObject joinInstance = Ko.getKoInstance(joinClass);
+			KMetaObject<? extends KObject> targetMetaObject = Ko.getMetaObject(clazz);
+			KMetaObject<? extends KObject> joinMetaObject = Ko.getMetaObject(joinClass);
+			// destInstance = Ko.getKoInstance(clazz);
+			// KObject joinInstance = Ko.getKoInstance(joinClass);
 			String fieldKey = this.getFirstKey();
-			String destTable = KSqlQuery.getTableName(destInstance.getTableName());
-			String destFieldKey = destInstance.getFirstKey();
-			List<String> joinFieldsKey = joinInstance.getKeyFields();
+			// String destTable =
+			// KSqlQuery.getTableName(destInstance.getTableName());
+			String destTable = targetMetaObject.getTableName();
+			// String destFieldKey = destInstance.getFirstKey();
+			String destFieldKey = targetMetaObject.getFirstKey();
+			// List<String> joinFieldsKey = joinInstance.getKeyFields();
+			List<String> joinFieldsKey = joinMetaObject.getKeyFields();
 			if (joinFieldsKey.size() == 2) {
 				String joinFieldKey = joinFieldsKey.get(0);
 				String joinDestFieldKey = joinFieldsKey.get(1);
