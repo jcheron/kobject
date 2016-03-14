@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,7 +64,7 @@ import net.ko.utils.KStrings.KGlueMode;
  * 
  */
 @SuppressWarnings("rawtypes")
-public class KObject implements Comparable, Serializable {
+public abstract class KObject implements Comparable, Serializable {
 	/**
 	 * 
 	 */
@@ -1338,25 +1339,21 @@ public class KObject implements Comparable, Serializable {
 	 * @throws NoSuchFieldException
 	 * @throws IllegalAccessException
 	 */
-	public void setAttributes(Map<String, Object> map, boolean fromDb) throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+	public <T> void setAttributes(Map<String, T> map, boolean fromDb) throws SecurityException, IllegalAccessException {
 		List<String> copyList = new ArrayList<>(map.keySet());
 		for (String attr : copyList) {
-			Object value = map.get(attr);
+			T value = map.get(attr);
 			String mn = getMemberName(attr);
 			if (!attr.equals(mn)) {
 				map.put(mn, value);
 				map.remove(attr);
 			}
-			__setAttribute(mn, value, fromDb);
-		}/*
-		 * for (Iterator iterator = map.entrySet().iterator();
-		 * iterator.hasNext();) { Map.Entry pairs = (Map.Entry) iterator.next();
-		 * try { String memberName = getMemberName((String) pairs.getKey());
-		 * __setAttribute(getMemberName((String) pairs.getKey()),
-		 * pairs.getValue()); } catch (Exception e) {
-		 * 
-		 * } }
-		 */
+			try {
+				__setAttribute(mn, value, fromDb);
+			} catch (NoSuchFieldException | IllegalArgumentException e) {
+				KDebugConsole.print("Le membre " + attr + " n'existe pas pour l'instance de " + getClass(), "KOBJECT", "KObject.setAttributes");
+			}
+		}
 	}
 
 	/**
@@ -1373,9 +1370,41 @@ public class KObject implements Comparable, Serializable {
 	 * @throws NoSuchFieldException
 	 * @throws IllegalAccessException
 	 */
-	public void setAttributes(String criteria, String separator) throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+	public void setAttributes(String criteria, String separator) throws SecurityException, IllegalAccessException {
 		KStrings ks = new KStrings(criteria, separator);
 		setAttributes(ks.getStrings(), false);
+	}
+
+	/**
+	 * Affecte à chacun des membres de l'objet en cours les valeurs de la map
+	 * passée en paramètre en ayant au préalable appliqué func à chacune des
+	 * valeurs
+	 * 
+	 * @param map
+	 * @param func
+	 *            fonction appelée sur chacune des valeurs de la map avant
+	 *            affectation des attributs
+	 * @param fromDb
+	 * @throws SecurityException
+	 * @throws NoSuchFieldException
+	 * @throws IllegalAccessException
+	 */
+	@SuppressWarnings("unchecked")
+	public <T, R, V> void setAttributes(Map<String, T> map, Function<R, V> func, boolean fromDb) throws SecurityException, IllegalAccessException {
+		List<String> copyList = new ArrayList<>(map.keySet());
+		for (String attr : copyList) {
+			try {
+				V value = func.apply((R) (map.get(attr) + ""));
+				String mn = getMemberName(attr);
+				if (!attr.equals(mn)) {
+					map.put(mn, (T) value);
+					map.remove(attr);
+				}
+				__setAttribute(mn, value, fromDb);
+			} catch (ClassCastException | NoSuchFieldException e) {
+				KDebugConsole.print("Le membre " + attr + " n'existe pas pour l'instance de " + getClass(), "KOBJECT", "KObject.setAttributes");
+			}
+		}
 	}
 
 	/**
