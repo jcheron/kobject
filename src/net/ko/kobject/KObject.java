@@ -64,7 +64,7 @@ import net.ko.utils.KStrings.KGlueMode;
  * 
  */
 @SuppressWarnings("rawtypes")
-public abstract class KObject implements Comparable, Serializable {
+public class KObject implements Comparable, Serializable {
 	/**
 	 * 
 	 */
