@@ -1390,19 +1390,22 @@ public class KObject implements Comparable, Serializable {
 	 * @throws IllegalAccessException
 	 */
 	@SuppressWarnings("unchecked")
-	public <T, R, V> void setAttributes(Map<String, T> map, Function<R, V> func, boolean fromDb) throws SecurityException, IllegalAccessException {
+	public <T, R, V> void setAttributes(Map<String, T> map, Function<R, V> func, boolean fromDb) {
 		List<String> copyList = new ArrayList<>(map.keySet());
 		for (String attr : copyList) {
 			try {
-				V value = func.apply((R) (map.get(attr) + ""));
-				String mn = getMemberName(attr);
-				if (!attr.equals(mn)) {
-					map.put(mn, (T) value);
-					map.remove(attr);
+				T t = map.get(attr);
+				if (t != null) {
+					V value = func.apply((R) (map.get(attr) + ""));
+					String mn = getMemberName(attr);
+					if (!attr.equals(mn)) {
+						map.put(mn, (T) value);
+						map.remove(attr);
+					}
+					__setAttribute(mn, value, fromDb);
 				}
-				__setAttribute(mn, value, fromDb);
-			} catch (ClassCastException | NoSuchFieldException e) {
-				KDebugConsole.print("Le membre " + attr + " n'existe pas pour l'instance de " + getClass(), "KOBJECT", "KObject.setAttributes");
+			} catch (ClassCastException | NoSuchFieldException | SecurityException | IllegalAccessException | IllegalArgumentException e) {
+				KDebugConsole.print(e.getMessage(), "KOBJECT", "KObject.setAttributes");
 			}
 		}
 	}
@@ -1827,6 +1830,12 @@ public class KObject implements Comparable, Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof KObject))
+			return false;
 		KObject ko = (KObject) obj;
 		return ko.getUniqueId().equals(getUniqueId());
 	}

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import net.ko.db.KDataBase;
 import net.ko.events.EventFileListener;
+import net.ko.kobject.KListObject;
 import net.ko.utils.KStrings;
 
 public class KernelCreator {
@@ -30,6 +31,11 @@ public class KernelCreator {
 	private EventFileListener eventFileListener = null;
 	private boolean hasController = false;
 	private String controllerFullPath = null;
+	private Class[] manyClass;
+	private String classNameTemplate = "K%className%";
+	private boolean generateAnnotations = true;
+	private boolean generateTestClasses = false;
+	private boolean removeId = true;
 
 	public String getControllerFullPath() {
 		return controllerFullPath;
@@ -62,6 +68,7 @@ public class KernelCreator {
 	public KernelCreator(String matchWith, ArrayList<String> tablesToCreate) {
 		this.matchWith = matchWith;
 		this.tablesToCreate = tablesToCreate;
+		manyClass = new Class[] { KListObject.class, KListObject.class };
 	}
 
 	public KDataBase getDb() {
@@ -108,8 +115,13 @@ public class KernelCreator {
 			tables = db.getTableNames(db.getBaseName());
 			KStrings strs = new KStrings(tablesToCreate);
 			for (String table : tables) {
-				if (table.matches(matchWith) || strs.contains(table))
-					classes.add(new KClassCreator(db, table, templateFolder));
+				if (table.matches(matchWith) || strs.contains(table)) {
+					KClassCreator classCreator = new KClassCreator(db, table, templateFolder, removeId);
+					classCreator.setManyClass(manyClass);
+					classCreator.setClassNameTemplate(classNameTemplate);
+					classCreator.setGenerateAnnotations(generateAnnotations);
+					classes.add(classCreator);
+				}
 			}
 			addConstraints();
 			classes.addConstraints();
@@ -139,16 +151,20 @@ public class KernelCreator {
 			controllerFullPath = d.getParent() + "/kox.xml";
 		}
 		classes.saveAs(path, packageName);
-		createTestClass(path, packageName);
-		createTestClasses(path, packageName);
+		if (generateTestClasses) {
+			createTestClass(path, packageName);
+			createTestClasses(path, packageName);
+		}
 		if (hasController)
 			createController();
 	}
 
 	public void saveAs(String packageName) {
 		classes.saveAs(packageName);
-		createTestClass("", packageName);
-		createTestClasses("", packageName);
+		if (generateTestClasses) {
+			createTestClass("", packageName);
+			createTestClasses("", packageName);
+		}
 		if (hasController)
 			createController();
 	}
@@ -186,5 +202,25 @@ public class KernelCreator {
 		cCreator.loadFromFile(templateFolder + "/controller.tpl");
 		classes.mkController(db, cCreator);
 		cCreator.saveAs(controllerFullPath);
+	}
+
+	public void setClassNameTemplate(String classNameTemplate) {
+		this.classNameTemplate = classNameTemplate;
+	}
+
+	public void setManyClass(Class[] manyClass) {
+		this.manyClass = manyClass;
+	}
+
+	public void setGenerateAnnotations(boolean generateAnnotations) {
+		this.generateAnnotations = generateAnnotations;
+	}
+
+	public void setGenerateTestClasses(boolean generateTestClasses) {
+		this.generateTestClasses = generateTestClasses;
+	}
+
+	public void setRemoveId(boolean removeId) {
+		this.removeId = removeId;
 	}
 }

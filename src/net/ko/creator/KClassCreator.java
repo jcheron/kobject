@@ -22,6 +22,7 @@ import net.ko.db.KDataBase;
 import net.ko.db.KDbField;
 import net.ko.db.creation.KUniqueConstraint;
 import net.ko.events.EventFileListener;
+import net.ko.kobject.KListObject;
 import net.ko.utils.KApplication;
 import net.ko.utils.KString;
 import net.ko.utils.KStrings;
@@ -39,6 +40,10 @@ public class KClassCreator {
 	private String templateFolder;
 	private Map<String, Object> fieldMap;
 	private Set<String> imports;
+	private Class[] manyClass;
+	private String classNameTemplate = "K%className%";
+	private boolean generateAnnotations = true;
+	private boolean removeId = true;
 
 	private EventFileListener eventFileListener;
 
@@ -90,24 +95,27 @@ public class KClassCreator {
 		this.db = db;
 	}
 
-	public KClassCreator(KDataBase db, String tableName, String templateFolder) {
+	public KClassCreator(KDataBase db, String tableName, String templateFolder, boolean removeId) {
 		super();
+		this.removeId = removeId;
 		imports = new LinkedHashSet<>();
 		this.db = db;
 		this.tableName = tableName;
 		setFields();
 		tplFile = new KTemplateFile();
 		setTemplateFolder(templateFolder);
+		this.manyClass = new Class[] { KListObject.class, KListObject.class };
 	}
 
 	public KClassCreator(KDataBase db, String tableName) {
-		this(db, tableName, "net/ko/templates/java");
+		this(db, tableName, "net/ko/templates/java", false);
 	}
 
 	private void setFields() {
 		try {
 			fields = db.getFieldNamesAndTypes(tableName);
-			fields.remove("id");
+			if (removeId)
+				fields.remove("id");
 			fields = correctFields(fields);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -145,7 +153,8 @@ public class KClassCreator {
 		for (Map.Entry<String, KDbField> eFields : fields.entrySet()) {
 			KDbField field = eFields.getValue();
 			String memberName = eFields.getKey();
-			result += field.getAnnotation(memberName, this);
+			if (generateAnnotations)
+				result += field.getAnnotation(memberName, this);
 			result += "\tprivate " + field.toString() + " " + memberName + ";\n";
 		}
 		return result;
@@ -178,8 +187,9 @@ public class KClassCreator {
 	}
 
 	public String getClassName() {
-		if (className == null)
-			return "K" + KString.capitalizeFirstLetter(tableName.replace(" ", "_"));
+		if (className == null) {
+			return classNameTemplate.replace("%className%", KString.capitalizeFirstLetter(tableName.replace(" ", "_")));
+		}
 		else
 			return className;
 	}
@@ -208,17 +218,10 @@ public class KClassCreator {
 		aTpl.parseWith("members", mkMembers());
 		aTpl.parseWith("setters", mkSetters());
 		aTpl.parseWith("getters", mkGetters());
-		aTpl.parseWith("annotations", getAnnotations());
+		if (generateAnnotations)
+			aTpl.parseWith("annotations", getAnnotations());
 		aTpl.parseWith("toString", mkToString());
 		aTpl.parseWith("imports", mkImports());
-		// aTpl.parseWith("fieldMap", mkFieldMap());
-		// try {
-		// aTpl.parseWith("keyFields", new
-		// KStrings(db.getKeyFields(tableName)).implode(","));
-		// } catch (SQLException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
 		return aTpl.toString();
 	}
 
@@ -294,28 +297,34 @@ public class KClassCreator {
 		return fields.containsKey(member);
 	}
 
-	private void addConstraint(String cName, String fkClassName) {
+	private void addConstraint(String cName, String fkClassName, String fkMemberName) {
 		KTemplateFile tpl = new KTemplateFile();
 		tpl.open(getPathName(templateFolder + "/" + cName + ".tpl"));
 		tpl.parseWith("fkClassName", fkClassName);
+		tpl.parseWith("fkMemberName", fkMemberName);
+		tpl.parseWith("manyClass", manyClass[0].getSimpleName());
+		if (manyClass.length >= 2 && !manyClass[0].getName().equals(manyClass[1].getName()))
+			tpl.parseWith("manyClassImpl", manyClass[1].getSimpleName());
 		tplFile.parseWith("constraints", tpl.getText(), true);
 	}
 
-	public void addBelongsTo(String fkClassName) {
-		addConstraint("belongsto", fkClassName);
+	public void addBelongsTo(String fkClassName, String fkMemberName) {
+		addConstraint("belongsto", fkClassName, fkMemberName);
 	}
 
-	public void addHasMany(String fkClassName) {
-		imports.add("import net.ko.kobject.KListObject;\n");
-		addConstraint("hasmany", fkClassName);
+	public void addHasMany(String fkClassName, String fkMemberName) {
+		imports.add("import " + manyClass[0].getName() + ";\n");
+		if (manyClass.length >= 2 && !manyClass[0].getName().equals(manyClass[1].getName()))
+			imports.add("import " + manyClass[1].getName() + ";\n");
+		addConstraint("hasmany", fkClassName, fkMemberName);
 	}
 
 	public void addFkMember(String fkTableName) {
-		fields.put(fkTableName, new KDbField(fkTableName, "K" + KString.capitalizeFirstLetter(fkTableName)));
+		fields.put(fkTableName, new KDbField(fkTableName, classNameTemplate.replace("%className%", KString.capitalizeFirstLetter(fkTableName))));
 	}
 
 	public void addManyMember(String fkTableName) {
-		fields.put(fkTableName + "s", new KDbField(fkTableName + "s", "KListObject<" + "K" + KString.capitalizeFirstLetter(fkTableName) + ">"));
+		fields.put(fkTableName + "s", new KDbField(fkTableName + "s", manyClass[0].getSimpleName() + "<" + classNameTemplate.replace("%className%", KString.capitalizeFirstLetter(fkTableName)) + ">"));
 	}
 
 	public void clean() {
@@ -332,5 +341,21 @@ public class KClassCreator {
 
 	public Set<String> getImports() {
 		return imports;
+	}
+
+	public void setClassNameTemplate(String classNameTemplate) {
+		this.classNameTemplate = classNameTemplate;
+	}
+
+	public void setManyClass(Class[] manyClass) {
+		this.manyClass = manyClass;
+	}
+
+	public void setGenerateAnnotations(boolean generateAnnotations) {
+		this.generateAnnotations = generateAnnotations;
+	}
+
+	public void setRemoveId(boolean removeId) {
+		this.removeId = removeId;
 	}
 }

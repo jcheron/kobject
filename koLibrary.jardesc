@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
-    <jar path="D:/workspaces/workspaceLast/qcmCharts/WebContent/WEB-INF/lib/koLibrary-1.0.0.26-beta1.jar"/>
+    <jar path="D:/workspaces/workspaceLast/testFxProject/lib/koLibrary-1.0.0.27-beta1.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/kobject/koLibrary.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
@@ -11,18 +11,8 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
-        <folder path="/kobject/org"/>
-        <file path="/kobject/manifestLib"/>
-        <file path="/kobject/.cvsignore"/>
-        <file path="/kobject/javadoc.xml"/>
-        <file path="/kobject/controller.xsd"/>
-        <file path="/kobject/.project"/>
-        <file path="/kobject/.classpath"/>
         <javaElement handleIdentifier="=kobject/src"/>
-        <folder path="/kobject/build"/>
-        <file path="/kobject/koLibrary.jardesc"/>
-        <folder path="/kobject/controller"/>
+        <folder path="/kobject/org"/>
         <folder path="/kobject/net"/>
-        <folder path="/kobject/lib"/>
     </selectedElements>
 </jardesc>

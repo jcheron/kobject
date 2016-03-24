@@ -548,25 +548,26 @@ public class Ko {
 			}
 			KDebugConsole.print("Démarrage de KObject", "FRAMEWORK", "Ko.start");
 		}
-		mainDAOEngine.init(schemaDdl);
-		if (KDataBase.getDbClassInstance(memoryDbType) != null) {
-			memoryDaoEngine = new GenericDAOEngine(memoryDbType);
-			if (memoryDaoEngine.isValid()) {
-				KListClass kclasses;
-				try {
-					kclasses = KListClass.kload();
-					mainDAOEngine.readEntitiesAndInsertTo(kclasses, memoryDaoEngine);
-					activeDaoEngine = memoryDaoEngine;
-					if (queriesThreadParams.isStart()) {
-						startThread();
+		if (!noDb) {
+			mainDAOEngine.init(schemaDdl);
+			if (KDataBase.getDbClassInstance(memoryDbType) != null) {
+				memoryDaoEngine = new GenericDAOEngine(memoryDbType);
+				if (memoryDaoEngine.isValid()) {
+					KListClass kclasses;
+					try {
+						kclasses = KListClass.kload();
+						mainDAOEngine.readEntitiesAndInsertTo(kclasses, memoryDaoEngine);
+						activeDaoEngine = memoryDaoEngine;
+						if (queriesThreadParams.isStart()) {
+							startThread();
+						}
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
 			}
 		}
-
 		// if(useCache){
 		// KCache.loadAllCache();
 		loaded = true;

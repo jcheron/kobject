@@ -76,8 +76,8 @@ public class KListClasses {
 			KClassCreator pkClass = getClass(fk.getPkTableName());
 			KClassCreator fkClass = getClass(fk.getFkTableName());
 			if (pkClass != null && fkClass != null) {
-				pkClass.addHasMany(fkClass.getClassName());
-				fkClass.addBelongsTo(pkClass.getClassName());
+				pkClass.addHasMany(fkClass.getClassName(), fkClass.getTableName() + "s");
+				fkClass.addBelongsTo(pkClass.getClassName(), pkClass.getTableName());
 
 				pkClass.addManyMember(fk.getFkTableName());
 				fkClass.addFkMember(fk.getPkTableName());
