@@ -49,6 +49,10 @@ public interface IGenericDao<T extends KObject> {
 
 	void close();
 
+	int count(Class<T> clazz, String condition) throws SQLException;
+
+	int count(Class<T> clazz) throws SQLException;
+
 	void setSelect(KListObject<T> listObject, String select);
 
 	KParameterizedInstruction getSelect(T object, KParameterizedInstruction condition);

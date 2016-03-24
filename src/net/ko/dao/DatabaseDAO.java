@@ -20,6 +20,7 @@ import net.ko.kobject.KObject;
 import net.ko.ksql.KParameterizedExecute;
 import net.ko.ksql.KParameterizedInstruction;
 import net.ko.ksql.KPreparedStatement;
+import net.ko.ksql.KSqlQuery;
 import net.ko.persistence.GenericDAOEngine;
 import net.ko.utils.KStrings;
 import net.ko.utils.KStrings.KGlueMode;
@@ -389,5 +390,23 @@ public class DatabaseDAO<T extends KObject> extends KGenericDao<T> {
 
 	public void setEngine(GenericDAOEngine engine) {
 		this.engine = engine;
+	}
+
+	@Override
+	public int count(Class<T> clazz, String condition) throws SQLException {
+		int result = 0;
+		KDataBase db = getDatabase();
+		String sql = Ko.getKoInstance(clazz).getSql(db.QUOTE());
+		if (condition != null && !"".equals(condition)) {
+			sql = KSqlQuery.addWhere(sql, condition);
+		}
+		sql = KSqlQuery.getCountQuery(sql);
+		result = db.rowCount(sql);
+		return result;
+	}
+
+	@Override
+	public int count(Class<T> clazz) throws SQLException {
+		return count(clazz, "");
 	}
 }

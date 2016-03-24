@@ -187,4 +187,12 @@ public class KoSession {
 	public static KDataBase kdefaultDatabase(Class<? extends KObject> clazz) {
 		return Ko.kdefaultDatabase(clazz);
 	}
+
+	public static <T extends KObject> int count(Class<T> clazz, String condition) throws SQLException {
+		return Ko.getDao(clazz).count(clazz, condition);
+	}
+
+	public static <T extends KObject> int count(Class<T> clazz) throws SQLException {
+		return Ko.getDao(clazz).count(clazz);
+	}
 }
